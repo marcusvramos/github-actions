@@ -46,8 +46,38 @@ jobs:
         run: |
           rm /tmp/private_key
 
-      - name: Notificar pelo Slack
+      - name: Notificar pelo Discord
         run: |
           curl -X POST -H 'Content-type: application/json' \
-            --data '{"text":"Deploy realizado com sucesso!"}' \
-            ${{ secrets.SLACK }}
+            --data '{
+              "content": "🚀 **Deploy realizado com sucesso!**",
+              "embeds": [{
+                "title": "App Demo Deploy",
+                "description": "Deploy automático concluído",
+                "color": 5763719,
+                "fields": [
+                  {
+                    "name": "📦 Repositório",
+                    "value": "${{ github.repository }}",
+                    "inline": true
+                  },
+                  {
+                    "name": "🔀 Branch",
+                    "value": "${{ github.ref_name }}",
+                    "inline": true
+                  },
+                  {
+                    "name": "👤 Autor",
+                    "value": "${{ github.actor }}",
+                    "inline": true
+                  },
+                  {
+                    "name": "📝 Commit",
+                    "value": "${{ github.event.head_commit.message || 'Manual trigger' }}",
+                    "inline": false
+                  }
+                ],
+                "timestamp": "'$(date -u +%Y-%m-%dT%H:%M:%S.000Z)'"
+              }]
+            }' \
+            ${{ secrets.DISCORD_WEBHOOK }}

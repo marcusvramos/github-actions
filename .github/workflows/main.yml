@@ -1,0 +1,52 @@
+name: Publicação automática
+
+on:  
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Cria um arquivo temporário para a chave privada e altera a permissão do arquivo para que só o dono possa ler e escrever (necessário para chaves)
+        run: |
+          echo "${{ secrets.KEY }}" > /tmp/private_key
+          chmod 600 /tmp/private_key
+
+      - name: Criando a pasta da aplicação e acertando diretório... 
+        run: |
+          ssh -i /tmp/private_key -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ubuntu@${{ secrets.HOST }} \
+          sudo mkdir -p /home/ubuntu/appdemo1
+
+      - name: Ajustar permissões no servidor de Produção
+        run: |
+          ssh -i /tmp/private_key -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ubuntu@${{ secrets.HOST }} "sudo chown -R ubuntu:ubuntu /home/ubuntu/appdemo1 && sudo chmod -R 755 /home/ubuntu/appdemo1"
+                      
+      - name: Transferindo os arquivos da aplicação
+        run: |
+          scp -i /tmp/private_key -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -r ${{ github.workspace }}/* ubuntu@${{ secrets.HOST }}:/home/ubuntu/appdemo1
+
+      - name: Restaurando a aplicação
+        run: |
+          ssh -i /tmp/private_key -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ubuntu@${{ secrets.HOST }} \
+          sudo npm install --prefix /home/ubuntu/appdemo1
+
+      - name: Reiniciando o serviço da aplicação
+        run: |
+          ssh -i /tmp/private_key -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ubuntu@${{ secrets.HOST }} \
+          sudo systemctl restart appdemo1.service              
+
+      - name: Limpa o arquivo de chave privada após uso
+        run: |
+          rm /tmp/private_key
+
+      - name: Notificar pelo Slack
+        run: |
+          curl -X POST -H 'Content-type: application/json' \
+            --data '{"text":"Deploy realizado com sucesso!"}' \
+            ${{ secrets.SLACK }}

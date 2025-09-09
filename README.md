@@ -59,8 +59,8 @@ appdemo1/
 
 1. Clone o repositório:
 ```bash
-git clone https://github.com/seu-usuario/appdemo1.git
-cd appdemo1
+git clone https://github.com/marcusvramos/github-actions.git
+cd github-actions
 ```
 
 2. Instale as dependências:
@@ -118,45 +118,3 @@ A aplicação exibe em tempo real:
 - 🌐 **IP do Servidor** - Endereço IP da máquina
 - 🕐 **Hora Atual** - Timestamp do servidor
 - ✅ **Status** - Indicador de servidor online
-
-## 🤝 Contribuindo
-
-Este é um projeto de estudo, mas sugestões e melhorias são bem-vindas! Sinta-se à vontade para:
-
-1. Fazer um Fork do projeto
-2. Criar uma branch para sua feature (`git checkout -b feature/AmazingFeature`)
-3. Commit suas mudanças (`git commit -m 'Add some AmazingFeature'`)
-4. Push para a branch (`git push origin feature/AmazingFeature`)
-5. Abrir um Pull Request
-
-## 📝 Licença
-
-Este projeto é de uso educacional e está disponível para livre uso e modificação.
-
-## 🎓 Aprendizados Documentados
-
-### GitHub Actions
-- Uso de `secrets` para dados sensíveis
-- Execução de comandos SSH remotos
-- Transferência de arquivos via SCP
-- Integração com webhooks externos
-
-### Servidor Linux
-- Configuração de serviços systemd
-- Gerenciamento de permissões
-- Estrutura de diretórios
-- Proxy reverso com Nginx
-
-### Boas Práticas
-- Versionamento semântico
-- Separação de configurações sensíveis
-- Documentação clara e objetiva
-- Pipeline automatizado de deploy
-
-## 📞 Contato
-
-Projeto desenvolvido para fins de estudo e aprendizado de DevOps e CI/CD.
-
----
-
-⭐ **Dica**: Este projeto é ideal para quem está começando com DevOps e quer entender na prática como funciona um pipeline de deploy automático!
